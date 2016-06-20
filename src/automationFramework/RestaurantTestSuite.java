@@ -349,6 +349,34 @@ public class RestaurantTestSuite extends BaseTestSuite {
 			udxUtil.utilClickLinkText( webdriver, "Surveys", 500 );
 			udxUtil.utilClickLinkText( webdriver, "Add Survey", 500 );
 			
+			/* Add a question */
+			udxUtil.utilSendKeysId( webdriver, "txtQuestionText", "Was the steak good?", 1000, 3 );
+			/* Add answers: yes or no */
+			udxUtil.utilSendKeysId( webdriver, "txtQuestionChoice1", "Yes", 1000, 3 );
+			udxUtil.utilSendKeysId( webdriver, "txtQuestionChoice2", "No", 1000, 3 );
+			
+			/* Click the "add question" button */
+			udxUtil.utilClickId( webdriver, "btnAddQuestion", 1000 );
+			/* Click the next step 2 button */
+			udxUtil.utilClickId( webdriver, "btnGotoStep2", 1000 );
+			
+			/* Input survey title */
+			udxUtil.utilSendKeysId( webdriver, "txtSurveyTitle", "Steak feedback", 1000, 3 );
+			/* Click the next step 3 button */
+			udxUtil.utilClickId( webdriver, "btnGotoStep3", 1000 );
+			
+			/* Just click complete for now */
+			udxUtil.utilClickId( webdriver, "btnGotoComplete", 1000 );
+			
+			/* Search for the following string to verify success */
+			if( !udxUtil.utilDisplayedCssSelector( webdriver, "div.alert.alert-success.alert-dismissible", 500, 3 ) )
+				result = false;
+			
+			/* Now, search for the survey we just created */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "Steak", 500, 3 );
+			
+			/* View the survey */
+			udxUtil.utilClickLinkText( webdriver, "View", 500 );
 		} else result = false;
 		
 		webdriver.close();
@@ -366,11 +394,11 @@ public class RestaurantTestSuite extends BaseTestSuite {
 	 */
 	public boolean[] run() {
 		boolean[] results = new boolean[] {
-			udxSelectFirstRestaurant(),
-			udxCreateNweRestaurant(),
-			udxViewRestaurant(),
-			udxSearchRestaurant(),
-			udxRestaurantTips(),
+			//udxSelectFirstRestaurant(),
+			//udxCreateNweRestaurant(),
+			//udxViewRestaurant(),
+			//udxSearchRestaurant(),
+			//udxRestaurantTips(),
 			udxCreateRestaurantSurvey(),
 		};
 		

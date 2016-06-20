@@ -37,9 +37,9 @@ public class BasicTestCase {
 		udxRestaurantTestSuite.udxSetWebdriver(wdName);
 		
 		BaseAutomationSuite[] udxAutomationSuite = new BaseAutomationSuite[] {
-			new BaseAutomationSuite() {	public void execute() { showResults( "LoginTestSuite", 		udxLoginTestSuite.run() ); } },
+			//new BaseAutomationSuite() {	public void execute() { showResults( "LoginTestSuite", 		udxLoginTestSuite.run() ); } },
 			new BaseAutomationSuite() {	public void execute() { showResults( "RestaurantTestSuite", udxRestaurantTestSuite.run() ); } },
-			new BaseAutomationSuite() {	public void execute() { showResults( "MiscTestSuite", 		udxMiscTestSuite.run() ); } },
+			//new BaseAutomationSuite() {	public void execute() { showResults( "MiscTestSuite", 		udxMiscTestSuite.run() ); } },
 		};
 				
 		/* Execute test suite */
