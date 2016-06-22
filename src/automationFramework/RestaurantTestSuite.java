@@ -373,10 +373,70 @@ public class RestaurantTestSuite extends BaseTestSuite {
 				result = false;
 			
 			/* Now, search for the survey we just created */
-			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "Steak", 500, 3 );
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "Steak", 1000, 3 );
 			
 			/* View the survey */
 			udxUtil.utilClickLinkText( webdriver, "View", 500 );
+		} else result = false;
+		
+		webdriver.close();
+		
+		if( result )
+			System.out.println( udxUtil.utilMethodName() + "(): PASSED\n" );
+		else
+			System.out.println( udxUtil.utilMethodName() + "(): FAILED\n" );
+		
+		return result;
+	}
+	
+	public boolean udxDeleteRestaurantSurvey()
+	{
+		WebDriver webdriver = udxBeginTest();
+		
+		webdriver.get( udxUrlLogin );
+		
+		boolean result = true;
+		
+		/* Login */
+		if( udxQuickLogin( webdriver, udxSudoUserName, udxSudoUserPass ) ) {
+			String title = webdriver.getTitle();
+			
+			if( !title.equals( udxTitleRestaurantList ) || !webdriver.getPageSource().contains( "Restaurants List" ) ) {
+				
+				/* Click the restaurants button */
+				udxUtil.utilClickCssSelector( webdriver, "i[class='fa fa-cutlery']", 1000 );
+				
+				/* Now click the add restaurant button */
+				udxUtil.utilClickLinkText( webdriver, "Restaurants List", 1000 );
+			}
+			
+			/* Search for the A-1 Steakhouse restaurant by inputting the text into the search bar */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "A-1", 1000, 3 );
+			
+			/* If the table is empty, then we failed to find that restaurant */
+			if( udxUtil.utilDisplayedClass( webdriver, "dataTables_empty", 100, 3 ) )
+				result = false;
+			
+			result = udxUtil.utilDisplayedClass( webdriver, "sorting_1", 100, 3 );
+			
+			/* Click the A-1 Steakhouse restaurant, this will select a restaurant */
+			udxUtil.utilClickLinkText( webdriver, "View", 500 );
+			
+			/* Go to A-1 Steakhouse -> Surveys -> Scheduled Surveys */
+			udxUtil.utilClickLinkText( webdriver, "Surveys", 500 );
+			udxUtil.utilClickLinkText( webdriver, "Scheduled Surveys", 500 );
+			
+			/* Search for the steak feedback survey */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "Steak feedback", 1000, 3 );
+			
+			/* Delete the survey */
+			udxUtil.utilClickLinkText( webdriver, "Delete", 500 );
+			/* Click OK */
+			udxUtil.utilClickCssSelector( webdriver, "button.btn.btn-primary", 1000 );
+			//udxUtil.utilClickLinkText( webdriver, "OK", 1000 );
+			
+			/* Did we get a messaging that we successfully deleted the survey? */
+			result = udxUtil.utilDisplayedCssSelector( webdriver, "div.alert.alert-success.alert-dismissable", 1000, 3 );
 		} else result = false;
 		
 		webdriver.close();
@@ -395,11 +455,12 @@ public class RestaurantTestSuite extends BaseTestSuite {
 	public boolean[] run() {
 		boolean[] results = new boolean[] {
 			//udxSelectFirstRestaurant(),
-			//udxCreateNweRestaurant(),
+			//udxCreateNweRestaurant(), 	/* BROKEN */
 			//udxViewRestaurant(),
 			//udxSearchRestaurant(),
-			//udxRestaurantTips(),
-			udxCreateRestaurantSurvey(),
+			//udxRestaurantTips(),		/* BROKEN */
+			//udxCreateRestaurantSurvey(),
+			udxDeleteRestaurantSurvey(),
 		};
 		
 		testCase = 0;
