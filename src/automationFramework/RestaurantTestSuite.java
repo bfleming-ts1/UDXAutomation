@@ -431,7 +431,9 @@ public class RestaurantTestSuite extends BaseTestSuite {
 			
 			/* Delete the survey */
 			udxUtil.utilClickLinkText( webdriver, "Delete", 500 );
+			
 			/* Click OK */
+			/* TODO: FIXME, none of these seem to work on the confirmation dialog */
 			udxUtil.utilClickCssSelector( webdriver, "button.btn.btn-primary", 1000 );
 			//udxUtil.utilClickLinkText( webdriver, "OK", 1000 );
 			
@@ -449,18 +451,281 @@ public class RestaurantTestSuite extends BaseTestSuite {
 		return result;
 	}
 	
+	public boolean udxEditRestaurantSurveyAddQuestion()
+	{
+		WebDriver webdriver = udxBeginTest();
+		
+		webdriver.get( udxUrlLogin );
+		
+		boolean result = true;
+		
+		/* Login */
+		if( udxQuickLogin( webdriver, udxSudoUserName, udxSudoUserPass ) ) {
+			String title = webdriver.getTitle();
+			
+			if( !title.equals( udxTitleRestaurantList ) || !webdriver.getPageSource().contains( "Restaurants List" ) ) {
+				
+				/* Click the restaurants button */
+				udxUtil.utilClickCssSelector( webdriver, "i[class='fa fa-cutlery']", 1000 );
+				
+				/* Now click the add restaurant button */
+				udxUtil.utilClickLinkText( webdriver, "Restaurants List", 1000 );
+			}
+			
+			/* Search for the A-1 Steakhouse restaurant by inputting the text into the search bar */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "A-1", 1000, 3 );
+			
+			/* If the table is empty, then we failed to find that restaurant */
+			if( udxUtil.utilDisplayedClass( webdriver, "dataTables_empty", 100, 3 ) )
+				result = false;
+			
+			result = udxUtil.utilDisplayedClass( webdriver, "sorting_1", 100, 3 );
+			
+			/* Click the A-1 Steakhouse restaurant, this will select a restaurant */
+			udxUtil.utilClickLinkText( webdriver, "View", 500 );
+			
+			/* Go to A-1 Steakhouse -> Surveys -> Scheduled Surveys */
+			udxUtil.utilClickLinkText( webdriver, "Surveys", 500 );
+			udxUtil.utilClickLinkText( webdriver, "Surveys List", 500 );
+			
+			/* Search for the steak feedback survey */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "Steak feedback", 1000, 3 );
+			
+			/* Click edit and add another question the survey */
+			udxUtil.utilClickLinkText( webdriver, "Edit", 500 );
+			udxUtil.utilClickId( webdriver, "aAddAnotherQuestion", 500 );
+			
+			/* Question text: was your steak too dry? */
+			udxUtil.utilSendKeysId( webdriver, "txtQuestionText", "Was your steak too dry?", 1000, 3 );
+			udxUtil.utilSendKeysId( webdriver, "txtQuestionChoice1", "Yes", 500, 3 );
+			udxUtil.utilSendKeysId( webdriver, "txtQuestionChoice2", "No", 500, 3 );
+			
+			/* Click the Add Question button */
+			udxUtil.utilClickId( webdriver, "btnAddQuestion", 500 );
+			
+			/* Did we get a messaging that we successfully added a question to the survey? */
+			//result = udxUtil.utilDisplayedCssSelector( webdriver, "div.alert.alert-success.alert-dismissable", 1000, 3 );
+			result = webdriver.getPageSource().contains( "Success" );
+			
+			/* Click the update button and finish */
+			udxUtil.utilClickId( webdriver, "btnUpdate", 1000 );
+			/* Did we get a messaging that we successfully edited the survey? */
+			//result = udxUtil.utilDisplayedCssSelector( webdriver, "div.alert.alert-success.alert-dismissable", 1000, 3 );
+			result = webdriver.getPageSource().contains( "Success" );
+		} else result = false;
+		
+		webdriver.close();
+		
+		if( result )
+			System.out.println( udxUtil.utilMethodName() + "(): PASSED\n" );
+		else
+			System.out.println( udxUtil.utilMethodName() + "(): FAILED\n" );
+		
+		return result;
+	}
+	
+	public boolean udxEditRestaurantSurveyDeleteQuestion()
+	{
+		WebDriver webdriver = udxBeginTest();
+		
+		webdriver.get( udxUrlLogin );
+		
+		boolean result = true;
+		
+		/* Login */
+		if( udxQuickLogin( webdriver, udxSudoUserName, udxSudoUserPass ) ) {
+			String title = webdriver.getTitle();
+			
+			if( !title.equals( udxTitleRestaurantList ) || !webdriver.getPageSource().contains( "Restaurants List" ) ) {
+				
+				/* Click the restaurants button */
+				udxUtil.utilClickCssSelector( webdriver, "i[class='fa fa-cutlery']", 1000 );
+				
+				/* Now click the add restaurant button */
+				udxUtil.utilClickLinkText( webdriver, "Restaurants List", 1000 );
+			}
+			
+			/* Search for the A-1 Steakhouse restaurant by inputting the text into the search bar */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "A-1", 1000, 3 );
+			
+			/* If the table is empty, then we failed to find that restaurant */
+			if( udxUtil.utilDisplayedClass( webdriver, "dataTables_empty", 100, 3 ) )
+				result = false;
+			
+			result = udxUtil.utilDisplayedClass( webdriver, "sorting_1", 100, 3 );
+			
+			/* Click the A-1 Steakhouse restaurant, this will select a restaurant */
+			udxUtil.utilClickLinkText( webdriver, "View", 500 );
+			
+			/* Go to A-1 Steakhouse -> Surveys -> Scheduled Surveys */
+			udxUtil.utilClickLinkText( webdriver, "Surveys", 500 );
+			udxUtil.utilClickLinkText( webdriver, "Surveys List", 500 );
+			//webdriver.navigate().to( "https://portals01.test.tsafe.systems/survey/surveylist" );
+			
+			/* Search for the steak feedback survey */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "Steak feedback", 1000, 3 );
+			
+			/* Click edit and the survey */
+			udxUtil.utilClickLinkText( webdriver, "Edit", 500 );
+			
+			/* Click the Add Question button */
+			//udxUtil.utilClickId( webdriver, "btnAddQuestion", 500 );
+			udxUtil.utilClickCssSelector( webdriver, "a.btn.btn-default.btn-xs.ladda-button", 1000 );
+			
+			/* Did we get a messaging that we successfully deleted a question to the survey? */
+			//result = udxUtil.utilDisplayedCssSelector( webdriver, "div.alert.alert-success.alert-dismissable", 1000, 3 );
+			result = webdriver.getPageSource().contains( "Success" );
+			
+		} else result = false;
+		
+		//webdriver.close();
+		
+		if( result )
+			System.out.println( udxUtil.utilMethodName() + "(): PASSED\n" );
+		else
+			System.out.println( udxUtil.utilMethodName() + "(): FAILED\n" );
+		
+		return result;
+	}
+	
+	public boolean udxRestaurantZipCode()
+	{
+		WebDriver webdriver = udxBeginTest();
+		
+		webdriver.get( udxUrlLogin );
+		
+		boolean result = true;
+		
+		/* Login */
+		if( udxQuickLogin( webdriver, udxSudoUserName, udxSudoUserPass ) ) {
+			String title = webdriver.getTitle();
+			
+			if( !title.equals( udxTitleRestaurantList ) || !webdriver.getPageSource().contains( "Restaurants List" ) ) {
+				
+				/* Click the restaurants button */
+				udxUtil.utilClickCssSelector( webdriver, "i[class='fa fa-cutlery']", 1000 );
+				
+				/* Now click the add restaurant button */
+				udxUtil.utilClickLinkText( webdriver, "Restaurants List", 1000 );
+			}
+			
+			/* Search for the A-1 Steakhouse restaurant by inputting the text into the search bar */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "A-1", 1000, 3 );
+			
+			/* If the table is empty, then we failed to find that restaurant */
+			if( udxUtil.utilDisplayedClass( webdriver, "dataTables_empty", 100, 3 ) )
+				result = false;
+			
+			result = udxUtil.utilDisplayedClass( webdriver, "sorting_1", 100, 3 );
+			
+			
+			/* Click the A-1 Steakhouse restaurant */
+			//udxUtil.utilClickCssSelector( webdriver, "a[class='btn btn-default btn-xs btn-ladda-auto ladda-button']", 1000 );
+			udxUtil.utilClickLinkText( webdriver, "Edit", 500 );
+			
+			/* Input negative values for the tips */
+			udxUtil.utilSendKeysId( webdriver, "txtPrimaryAddressZipCode", "98199-8888", 1000, 3 );
+			
+			/* Click update button */
+			udxUtil.utilClickId( webdriver, "btnUpdateRestaurant", 1000 );
+			
+			if( !webdriver.getPageSource().contains( "Success" ) )
+				result = false;
+		} else result = false;
+		
+		webdriver.close();
+		
+		if( result )
+			System.out.println( udxUtil.utilMethodName() + "(): PASSED\n" );
+		else
+			System.out.println( udxUtil.utilMethodName() + "(): FAILED\n" );
+		
+		return result;
+	}
+	
+	public boolean udxRestaurantAddAdminUser()
+	{
+		WebDriver webdriver = udxBeginTest();
+		
+		webdriver.get( udxUrlLogin );
+		
+		boolean result = true;
+		
+		/* Login */
+		if( udxQuickLogin( webdriver, udxSudoUserName, udxSudoUserPass ) ) {
+			String title = webdriver.getTitle();
+			
+			if( !title.equals( udxTitleRestaurantList ) || !webdriver.getPageSource().contains( "Restaurants List" ) ) {
+				
+				/* Click the restaurants button */
+				udxUtil.utilClickCssSelector( webdriver, "i[class='fa fa-cutlery']", 1000 );
+				
+				/* Now click the add restaurant button */
+				udxUtil.utilClickLinkText( webdriver, "Restaurants List", 1000 );
+			}
+			
+			/* Search for the A-1 Steakhouse restaurant by inputting the text into the search bar */
+			udxUtil.utilSendKeysCssSelector( webdriver, "input.form-control.input-sm", "A-1", 1000, 3 );
+			
+			/* If the table is empty, then we failed to find that restaurant */
+			if( udxUtil.utilDisplayedClass( webdriver, "dataTables_empty", 100, 3 ) )
+				result = false;
+			
+			result = udxUtil.utilDisplayedClass( webdriver, "sorting_1", 100, 3 );
+			
+			/* Click the A-1 Steakhouse restaurant, this will select a restaurant */
+			udxUtil.utilClickLinkText( webdriver, "View", 500 );
+			
+			/* Go to A-1 Steakhouse -> Restaurant Users -> Add User */
+			udxUtil.utilClickLinkText( webdriver, "Restaurant Users", 500 );
+			udxUtil.utilClickLinkText( webdriver, "Add User", 500 );
+			
+			/* User name */
+			udxUtil.utilSendKeysId( webdriver, "txtAccountDetailsUsername", "MidgitMan", 1000, 3 );
+			/* First and last name */
+			udxUtil.utilSendKeysId( webdriver, "txtAccountDetailsFirstName", "Farengue", 1000, 3 );
+			udxUtil.utilSendKeysId( webdriver, "txtAccountDetailsLastName", "Wazelatti", 1000, 3 );
+			/* email */
+			udxUtil.utilSendKeysId( webdriver, "txtAccountDetailsEmail", "example@foo.com", 1000, 3 );
+			/* Phone number */
+			udxUtil.utilSendKeysId( webdriver, "txtAccountDetailsPhone", "5555555555", 1000, 3 );
+			/* Password */
+			udxUtil.utilSendKeysId( webdriver, "txtPasswordDetailsPassword", "Worlds#1Midget", 1000, 3 );
+			udxUtil.utilSendKeysId( webdriver, "txtPasswordDetailsConfirmPassword", "Worlds#1Midget", 1000, 3 );
+			
+			/* Click the "add question" button */
+			udxUtil.utilClickId( webdriver, "btnCreateUser", 1000 );
+
+			if( !webdriver.getPageSource().contains( "Users 'MidgetMan' already exists" ) || !webdriver.getPageSource().contains( "Success" ) )
+				result = false;
+		} else result = false;
+		
+		//webdriver.close();
+		
+		if( result )
+			System.out.println( udxUtil.utilMethodName() + "(): PASSED\n" );
+		else
+			System.out.println( udxUtil.utilMethodName() + "(): FAILED\n" );
+		
+		return result;
+	}
+	
 	/*
 	 * Runs all test cases
 	 */
 	public boolean[] run() {
 		boolean[] results = new boolean[] {
-			//udxSelectFirstRestaurant(),
-			//udxCreateNweRestaurant(), 	/* BROKEN */
-			//udxViewRestaurant(),
-			//udxSearchRestaurant(),
-			//udxRestaurantTips(),		/* BROKEN */
-			//udxCreateRestaurantSurvey(),
-			udxDeleteRestaurantSurvey(),
+			udxSelectFirstRestaurant(),
+			udxCreateNweRestaurant(), 		/* BROKEN */
+			udxViewRestaurant(),
+			udxSearchRestaurant(),
+			udxRestaurantTips(),			/* BROKEN */
+			udxCreateRestaurantSurvey(),
+			udxEditRestaurantSurveyAddQuestion(),
+			udxEditRestaurantSurveyDeleteQuestion(),
+			udxDeleteRestaurantSurvey(),	/* BROKEN */
+			udxRestaurantZipCode(),
+			udxRestaurantAddAdminUser(),	/* BROKEN */
 		};
 		
 		testCase = 0;

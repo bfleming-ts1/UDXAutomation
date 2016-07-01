@@ -243,7 +243,14 @@ public class UDXUtil {
 		if( !result )
 			System.out.println( "^ FAILED" );
 		
-		webdriver.findElement( By.id( id ) ).sendKeys(Keys.chord(Keys.CONTROL, "a"), seq);
+		try {
+			webdriver.findElement( By.id( id ) ).sendKeys(Keys.chord(Keys.CONTROL, "a"), seq);
+		} catch( NoSuchElementException e ) {
+			if( result != false ) {
+				result = false;
+				System.out.println( "^ FAILED" );
+			}
+		}
 		//webdriver.findElement( By.id( id ) ).sendKeys(seq);
 		
 		return result;
@@ -283,7 +290,14 @@ public class UDXUtil {
 		if( !result )
 			System.out.println( "^ FAILED" );
 		
+		try {
 		webdriver.findElement( By.cssSelector( css ) ).sendKeys(Keys.chord(Keys.CONTROL, "a"), seq);
+		} catch( NoSuchElementException e ) {
+			if( result != false ) {
+				result = false;
+				System.out.println( "^ FAILED" );
+			}
+		}
 		//webdriver.findElement( By.cssSelector( css ) ).sendKeys(seq);
 		
 		return result;
